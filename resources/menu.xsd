@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.training.by/Task2/menu"  
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:tns="http://www.training.by/Task2/menu">
+	<element name="menu">
+    	<complexType>
+    		<sequence>
+    			<element name="list-dishes" type="tns:Dishes" minOccurs="1" maxOccurs="unbounded"/>
+    		</sequence>
+    	</complexType>
+    </element>
+
+	<complexType name="Dishes">
+		<sequence>
+			<element name="food" type="tns:Food" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="nameListDishes"  type="tns:Name" use="required"/>
+		<attribute name="id"  type="tns:UniqueId" use="required"/>
+	</complexType>
+	
+	<simpleType name="Name">
+		<restriction base="string">
+			<enumeration value="cold collationes"></enumeration>
+			<enumeration value="hot collationes"></enumeration>
+			<enumeration value="breakfast dishes"></enumeration>
+		</restriction>
+	</simpleType>
+	
+	<complexType name="Food">
+		<sequence>
+			<element name="name" type="string"/>
+			<element name="description" type="string"/>
+			<element name="portion" type="string"/>
+			<element name="price" type="positiveInteger"/>
+		</sequence>
+		<attribute name="id" type="tns:Id" use="required"/>
+	</complexType>
+	<!--
+	<complexType name="PriceList">
+		<sequence>
+			<element name="price" type="positiveInteger" minOccurs="1" maxOccurs="unbounded"/>
+     	</sequence>
+	</complexType>
+	-->
+	
+	<simpleType name="UniqueId">
+	<restriction base="ID">
+		<pattern value="[a-z]{2}[0-9]{1}"/>
+	</restriction>
+	</simpleType>
+	
+	<simpleType name="Id">
+		<restriction base="positiveInteger">
+			<minInclusive value="1"/>
+			<maxInclusive value="20"/>
+		</restriction>
+	</simpleType>
+</schema>

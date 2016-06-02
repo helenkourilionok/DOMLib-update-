@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<tns:menu xmlns:tns="http://www.training.by/Task2/menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.training.by/Task2/menu menu.xsd ">
+  <list-dishes id="id1" nameListDishes="cold collationes">
+    <food id="1">
+      <name>Ассорти рыбное</name>
+      <description>Слабосолёная форель,сёмга</description>
+      <portion>100/20/15</portion>
+      <price>100</price>
+    </food>
+  </list-dishes>
+  <list-dishes id="id2" nameListDishes="hot collationes">
+    <food id="1">
+      <name>Мидии по-турецки</name>
+      <description>Мидии фаршированыые сыром и грецким орехом</description>
+      <portion>150/30</portion>
+      <price>190</price>
+    </food>
+    <food id="2">
+      <name>Эскарго</name>
+      <description>Виноградные улитки, фаршированные по-бургундски</description>
+      <portion>12 шт./15 шт.</portion>
+      <price>145</price>
+    </food>
+  </list-dishes>
+  <list-dishes id="id3" nameListDishes="breakfast dishes">
+  	<food id="1">
+      <name>Глазунья</name>
+      <description>2 яйца(на выбор:ветчина, сыр, помидоры)</description>
+      <portion>150</portion>
+      <price>150</price>
+    </food>
+  </list-dishes>
+</tns:menu>
