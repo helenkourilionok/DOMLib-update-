@@ -28,60 +28,80 @@ public class DOMParser implements IParser {
 	        Matcher match = PatternPasing.findTag.matcher(xmlContent);
 	        Matcher tmpMatch;
 	        String tag;//<tag>,<tag/>,</tag>
-	        String tagName;
-	        String textContent;
-	        boolean noTextContent;
-	
 	        while(match.find()){
 	
 	            tag=match.group(1);//ищем теги - <tag>
+	            
 	            tmpMatch=PatternPasing.findStartTag.matcher(tag);
-	            //проверяем является ли тег окрывающим
+	            
 	            if(tmpMatch.matches()) {
-	                if(tmpMatch.group(2)!=null){//<tag/>
-	                	noTextContent = true;
-	                }else{//<tag>
-	                	noTextContent = false;
-	                }
-	
-	                tagName="";
-	                tmpMatch= PatternPasing.findTagName.matcher(tag);
-	                if(tmpMatch.find()){
-	                    tagName=tmpMatch.group(1);//<tag> --> tagName = tag
-	                }
-	                lastOpenTagName=tagName;
-	                lastOpenTagEndPos=match.end();
-	
-	                ArrayList<DOMAttr> attributes=parseAttributes(tag);
-	                startElement(tagName, attributes,noTextContent);
-	              //если тег закрывающий, то
+	            	
+	              startTag(tmpMatch,match,tag);
+	              
 	            }else {
-	                tmpMatch = PatternPasing.findEndTag.matcher(tag);
-	                if(tmpMatch.matches()) {
-	
-	                    textContent="";
-	                    if(lastOpenTagName.equals(tmpMatch.group(1))){
-	                        textContent=xmlContent.substring(lastOpenTagEndPos, match.start());
-	                    }
-	                   
-	                    lastOpenTagName="";
-	                    endElement(tmpMatch.group(1), textContent.trim());
-	                }
+	            	
+	             tmpMatch = PatternPasing.findEndTag.matcher(tag);
+	               
+	             endTag(tmpMatch,match);
+
 	            }
 	        }
     	}
     	catch(FileNotFoundException ex)
     	{
-    		System.err.println("File not found!");
+    		ex.printStackTrace();
     	}
     	catch(IOException ex)
     	{
-    		System.err.println("IOException");
+    		ex.printStackTrace();
     	}
         return new DOMDocument(root);
     }
 
-    public void startElement(String tagName, ArrayList<DOMAttr> attributes, boolean noTextContent){
+    private void endTag(Matcher matcher,Matcher matcherAll) 
+    {
+    	if(matcher.matches()) {
+    		
+	      	  String textContent="";
+	      	  
+	          if(lastOpenTagName.equals(matcher.group(1))){
+	        	  
+	              textContent=xmlContent.substring(lastOpenTagEndPos, matcherAll.start());
+	          }
+	          
+	          lastOpenTagName="";
+	          endElement(matcher.group(1), textContent.trim());
+          }
+    }
+    
+    private void startTag(Matcher matcher,Matcher matcherAll,String tag)
+    {
+    	  boolean noTextContent = isTextContent(matcher);
+    		
+          String tagName="";
+          matcher = PatternPasing.findTagName.matcher(tag);
+          if(matcher.find()){
+              tagName=matcher.group(1);//<tag> --> tagName = tag
+          }
+          lastOpenTagName=tagName;
+          lastOpenTagEndPos=matcherAll.end();
+
+          ArrayList<DOMAttr> attributes=parseAttributes(tag);
+          startElement(tagName, attributes,noTextContent);
+    }
+    
+    private boolean isTextContent(Matcher matcher)
+    {
+    	boolean result = false;
+    	if(matcher.group(2)!=null){//<tag/>
+    		result = true;
+        }else{//<tag>
+        	result = false;
+        }
+    	return result;
+    }
+    
+    private void startElement(String tagName, ArrayList<DOMAttr> attributes, boolean noTextContent){
         DOMNode node=new DOMNode();
         node.setRoot(current);
         if(root==null){
@@ -99,7 +119,7 @@ public class DOMParser implements IParser {
         }
     }
 
-    public void endElement(String tagName, String textContents){
+    private void endElement(String tagName, String textContents){
         if(textContents!=""){
             current.setContent(textContents);
         }
